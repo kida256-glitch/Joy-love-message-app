@@ -122,13 +122,36 @@ function Scene3D() {
   )
 }
 
+interface SavedMessage {
+  id: string
+  message: string
+  date: string
+  timestamp: number
+}
+
 export default function Home() {
   const [currentMessage, setCurrentMessage] = useState("")
   const [currentImage, setCurrentImage] = useState("")
   const [isLoaded, setIsLoaded] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
+  const [savedMessages, setSavedMessages] = useState<SavedMessage[]>([])
+  const [showSavedMessages, setShowSavedMessages] = useState(false)
 
   useEffect(() => {
+    // Load saved messages from localStorage
+    const loadSavedMessages = () => {
+      try {
+        const saved = localStorage.getItem('savedLoveMessages')
+        if (saved) {
+          setSavedMessages(JSON.parse(saved))
+        }
+      } catch (error) {
+        console.error('Error loading saved messages:', error)
+      }
+    }
+
+    loadSavedMessages()
+
     // Fetch the daily image from the API
     const fetchDailyImage = async () => {
       try {
@@ -157,6 +180,42 @@ export default function Home() {
 
     setIsLoaded(true)
   }, [])
+
+  const saveMessage = () => {
+    const newMessage: SavedMessage = {
+      id: Date.now().toString(),
+      message: currentMessage,
+      date: new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+      timestamp: Date.now(),
+    }
+
+    const updatedMessages = [newMessage, ...savedMessages]
+    setSavedMessages(updatedMessages)
+    
+    try {
+      localStorage.setItem('savedLoveMessages', JSON.stringify(updatedMessages))
+    } catch (error) {
+      console.error('Error saving message:', error)
+    }
+  }
+
+  const deleteMessage = (id: string) => {
+    const updatedMessages = savedMessages.filter(msg => msg.id !== id)
+    setSavedMessages(updatedMessages)
+    
+    try {
+      localStorage.setItem('savedLoveMessages', JSON.stringify(updatedMessages))
+    } catch (error) {
+      console.error('Error deleting message:', error)
+    }
+  }
+
+  const isMessageAlreadySaved = savedMessages.some(msg => msg.message === currentMessage)
 
   return (
     <main className="relative w-full h-screen overflow-hidden">
@@ -234,12 +293,33 @@ export default function Home() {
           )}
 
           {/* Love Button - Enhanced glow effect */}
-          <div className="flex justify-center animate-fade-in [animation-delay:800ms]">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-in [animation-delay:800ms]">
             <button
               onClick={() => setShowPopup(true)}
               className="group relative px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(255,105,180,0.6)] hover:shadow-[0_0_50px_rgba(255,105,180,0.9)] transform hover:scale-105 transition-all duration-300 hover:from-pink-600 hover:via-rose-600 hover:to-pink-700"
             >
               <span className="relative z-10 drop-shadow-lg">Tap for Love</span>
+              <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+            
+            <button
+              onClick={saveMessage}
+              disabled={isMessageAlreadySaved}
+              className="group relative px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-purple-500 via-violet-500 to-purple-600 text-white rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:shadow-[0_0_50px_rgba(168,85,247,0.9)] transform hover:scale-105 transition-all duration-300 hover:from-purple-600 hover:via-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              <span className="relative z-10 drop-shadow-lg">
+                {isMessageAlreadySaved ? '💾 Saved' : '💾 Save Message'}
+              </span>
+              <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+            
+            <button
+              onClick={() => setShowSavedMessages(true)}
+              className="group relative px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(251,113,133,0.6)] hover:shadow-[0_0_50px_rgba(251,113,133,0.9)] transform hover:scale-105 transition-all duration-300 hover:from-rose-600 hover:via-pink-600 hover:to-rose-700"
+            >
+              <span className="relative z-10 drop-shadow-lg">
+                📖 Saved ({savedMessages.length})
+              </span>
               <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
@@ -298,6 +378,85 @@ export default function Home() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Saved Messages Modal */}
+      {showSavedMessages && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in overflow-y-auto"
+          onClick={() => setShowSavedMessages(false)}
+        >
+          <div
+            className="relative max-w-[95vw] sm:max-w-2xl md:max-w-3xl w-full bg-gradient-to-br from-pink-500/98 via-rose-500/98 to-pink-600/98 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_0_60px_rgba(255,105,180,0.8)] border-4 border-pink-200/60 animate-scale-in my-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]"
+                style={{ textShadow: "0 4px 8px rgba(0,0,0,0.9), 0 0 30px rgba(255,255,255,0.4)" }}
+              >
+                📖 Saved Messages
+              </h2>
+              <p
+                className="text-sm sm:text-base text-pink-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+                style={{ textShadow: "0 2px 4px rgba(0,0,0,0.9)" }}
+              >
+                Your collection of love messages
+              </p>
+            </div>
+
+            {/* Messages List */}
+            <div className="max-h-[60vh] overflow-y-auto space-y-4 mb-6 pr-2">
+              {savedMessages.length === 0 ? (
+                <div className="text-center py-12">
+                  <p
+                    className="text-lg sm:text-xl text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+                    style={{ textShadow: "0 2px 4px rgba(0,0,0,0.9)" }}
+                  >
+                    No saved messages yet. Save your favorite messages to keep them here! 💕
+                  </p>
+                </div>
+              ) : (
+                savedMessages.map((savedMsg) => (
+                  <div
+                    key={savedMsg.id}
+                    className="bg-white/20 backdrop-blur-sm rounded-xl p-4 sm:p-5 border-2 border-pink-200/30 shadow-lg hover:bg-white/25 transition-all duration-300"
+                  >
+                    <p
+                      className="text-sm sm:text-base text-white leading-relaxed mb-3 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]"
+                      style={{ textShadow: "0 2px 4px rgba(0,0,0,0.9)" }}
+                    >
+                      {savedMsg.message}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <p
+                        className="text-xs sm:text-sm text-pink-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]"
+                        style={{ textShadow: "0 1px 3px rgba(0,0,0,0.9)" }}
+                      >
+                        {savedMsg.date}
+                      </p>
+                      <button
+                        onClick={() => deleteMessage(savedMsg.id)}
+                        className="px-3 py-1.5 bg-red-500/80 hover:bg-red-600/90 text-white rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setShowSavedMessages(false)}
+              className="w-full px-6 py-3 bg-white/25 hover:bg-white/35 text-white rounded-full font-semibold text-sm sm:text-base backdrop-blur-sm transition-all duration-300 hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)]"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
