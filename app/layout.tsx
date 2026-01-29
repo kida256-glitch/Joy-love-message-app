@@ -44,8 +44,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geist.className} font-sans antialiased`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${geist.className} font-sans antialiased overflow-x-hidden`}>
         {children}
         <Analytics />
       </body>

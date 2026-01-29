@@ -301,9 +301,9 @@ export default function Home() {
   const isMessageAlreadySaved = savedMessages.some(msg => msg.message === currentMessage)
 
   return (
-    <main className="relative w-full h-screen overflow-hidden">
+    <main className="relative w-full min-h-screen overflow-y-auto">
       {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
           <Scene3D />
         </Canvas>
@@ -501,7 +501,7 @@ export default function Home() {
           onClick={() => setShowSavedMessages(false)}
         >
           <div
-            className="relative max-w-[95vw] sm:max-w-2xl md:max-w-3xl w-full bg-gradient-to-br from-pink-500/98 via-rose-500/98 to-pink-600/98 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_0_60px_rgba(255,105,180,0.8)] border-4 border-pink-200/60 animate-scale-in my-8"
+            className="relative max-w-[95vw] sm:max-w-2xl md:max-w-3xl w-full bg-gradient-to-br from-pink-500/98 via-rose-500/98 to-pink-600/98 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_0_60px_rgba(255,105,180,0.8)] border-4 border-pink-200/60 animate-scale-in my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}

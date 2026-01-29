@@ -87,11 +87,17 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply text-foreground;
+    height: 100%;
     background: linear-gradient(135deg, 
       #FFB6D9 0%, 
       #FFA0C9 10%,
