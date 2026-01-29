@@ -6,15 +6,16 @@ export async function GET() {
     const publicDir = path.join(process.cwd(), 'public');
     const files = await fs.readdir(publicDir);
     
-    // Filter for image files only (exclude common non-image files)
+    // Filter for image files only (exclude icon and logo files)
     const imageFiles = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
-      // Include jpg, jpeg, png, gif, webp but exclude icon files
+      // Include jpg, jpeg, png, gif, webp
       if (!['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
         return false;
       }
-      // Exclude icon and placeholder files
-      if (file.includes('icon') || file.includes('placeholder') || file.includes('apple')) {
+      const lowerFile = file.toLowerCase();
+      // Exclude only icon and logo files, keep all photos including placeholders
+      if (lowerFile.includes('icon') || lowerFile.includes('logo') || lowerFile.includes('apple')) {
         return false;
       }
       return true;

@@ -5,6 +5,12 @@ import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Float, Stars, MeshDistortMaterial } from "@react-three/drei"
 import * as THREE from "three"
 
+// Special Valentine's Day message for February 14th
+const valentinesMessage = "My Beautiful Joy, Happy Valentine's Day 💋 Today, I want to tell you something that sets my soul on fire: I crave you. Not just your touch, though every moment in your arms feels like heaven. I crave the intimate connection we share—the way our souls intertwine, the electricity that flows between us when we're close. The way you look at me sends shivers down my spine. Our intimate moments together are my sanctuary, where the world fades away and it's just us, lost in each other. I love the passion we share, the way our bodies speak a language only we understand. The vulnerability, the trust, the raw desire—it's intoxicating. You ignite something in me that I've never felt before. Every whisper, every touch, every stolen glance—I cherish it all. I love our intimate vibes, the magnetic pull between us that makes my heart race even after all this time. You're not just my love, you're my desire, my fantasy, my reality all wrapped into one perfect being. Tonight and every night, I want to show you just how deeply I need you, how completely you captivate me. Forever yours, body and soul. - Benjamin 🌹💕"
+
+// Special monthly anniversary message for the 30th of each month
+const anniversaryMessage = "My Dearest Joy, Happy Monthly Anniversary! 💕 Today marks another beautiful month of us, and my heart overflows with gratitude. Thank you for choosing me. Thank you for loving me when I didn't feel lovable. Thank you for seeing the best in me even when I couldn't see it myself. Every day with you is a blessing I never take for granted. You didn't have to love me, but you chose to. You didn't have to stay, but you chose to build a life with me. That choice—your choice to love me—has transformed my entire world. You are my greatest treasure, my answered prayer, my home. I am endlessly grateful that you said yes to this journey with me. I love you more with each passing month, and I promise to spend the rest of my life showing you just how much you mean to me. Thank you for being mine. Thank you for letting me be yours. Forever grateful, forever yours. - Benjamin 💖"
+
 // Daily love messages - heartfelt and touching
 const loveMessages = [
   "Joy, when I look at you, I don't just see the woman I love. I see my purpose, my reason for being. You've become the center of my universe, and I wouldn't have it any other way. Every breath I take is for you.",
@@ -69,7 +75,7 @@ function Heart({ position, scale, color }: { position: [number, number, number];
 
 // Floating particles
 function Particles() {
-  const count = 50
+  const count = 100
   const positions = new Float32Array(count * 3)
 
   for (let i = 0; i < count; i++) {
@@ -83,7 +89,7 @@ function Particles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
       </bufferGeometry>
-      <pointsMaterial size={0.1} color="#ffc0e3" transparent opacity={0.6} />
+      <pointsMaterial size={0.15} color="#ffc0e3" transparent opacity={0.8} />
     </points>
   )
 }
@@ -92,9 +98,11 @@ function Particles() {
 function Scene3D() {
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <pointLight position={[-10, -10, -5]} intensity={0.5} color="#ff69b4" />
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[10, 10, 5]} intensity={1.2} />
+      <pointLight position={[-10, -10, -5]} intensity={0.8} color="#ff1493" />
+      <pointLight position={[10, -10, -5]} intensity={0.6} color="#ff69b4" />
+      <pointLight position={[0, 10, 5]} intensity={0.5} color="#ffc0cb" />
 
       {/* Floating hearts */}
       <Heart position={[-3, 2, -5]} scale={0.5} color="#ff1493" />
@@ -102,12 +110,28 @@ function Scene3D() {
       <Heart position={[0, 3, -8]} scale={0.6} color="#ffc0cb" />
       <Heart position={[-4, -2, -6]} scale={0.3} color="#ffb6c1" />
       <Heart position={[4, 1, -4]} scale={0.35} color="#ff1493" />
+      <Heart position={[-2, -3, -7]} scale={0.45} color="#ff69b4" />
+      <Heart position={[2, 2.5, -6]} scale={0.4} color="#ffa0c9" />
 
-      {/* Floating sphere with distortion */}
+      {/* Multiple floating spheres with distortion */}
       <Float speed={1.5} rotationIntensity={0.3} floatIntensity={1}>
         <mesh position={[0, 0, -10]} scale={2}>
           <sphereGeometry args={[1, 64, 64]} />
-          <MeshDistortMaterial color="#ff69b4" transparent opacity={0.1} distort={0.3} speed={2} />
+          <MeshDistortMaterial color="#ff69b4" transparent opacity={0.15} distort={0.4} speed={2} />
+        </mesh>
+      </Float>
+      
+      <Float speed={2} rotationIntensity={0.4} floatIntensity={1.5}>
+        <mesh position={[5, 3, -15]} scale={1.5}>
+          <sphereGeometry args={[1, 64, 64]} />
+          <MeshDistortMaterial color="#ff1493" transparent opacity={0.1} distort={0.3} speed={1.5} />
+        </mesh>
+      </Float>
+      
+      <Float speed={1.8} rotationIntensity={0.2} floatIntensity={1.2}>
+        <mesh position={[-5, -2, -12]} scale={1.8}>
+          <sphereGeometry args={[1, 64, 64]} />
+          <MeshDistortMaterial color="#ffc0cb" transparent opacity={0.12} distort={0.35} speed={2.5} />
         </mesh>
       </Float>
 
@@ -115,7 +139,7 @@ function Scene3D() {
       <Particles />
 
       {/* Stars */}
-      <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+      <Stars radius={100} depth={50} count={1500} factor={4} saturation={0.3} fade speed={1} />
 
       <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
     </>
@@ -132,6 +156,10 @@ interface SavedMessage {
 export default function Home() {
   const [currentMessage, setCurrentMessage] = useState("")
   const [currentImage, setCurrentImage] = useState("")
+  const [leftImage, setLeftImage] = useState("")
+  const [rightImage, setRightImage] = useState("")
+  const [allImages, setAllImages] = useState<string[]>([])
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [savedMessages, setSavedMessages] = useState<SavedMessage[]>([])
@@ -158,12 +186,29 @@ export default function Home() {
         const response = await fetch('/api/daily-image');
         const data = await response.json();
         
-        if (data.image) {
-          setCurrentImage(data.image);
+        if (data.image && data.allImages && data.allImages.length > 0) {
+          setAllImages(data.allImages);
+          setCurrentImageIndex(data.currentIndex);
+          
+          // Set initial images
+          const currentIdx = data.currentIndex;
+          const totalImages = data.allImages.length;
+          
+          setCurrentImage(data.allImages[currentIdx]);
+          
+          // Get left image (previous image, wrapping around if needed)
+          const leftIdx = (currentIdx - 1 + totalImages) % totalImages;
+          setLeftImage(data.allImages[leftIdx]);
+          
+          // Get right image (next image, wrapping around if needed)
+          const rightIdx = (currentIdx + 1) % totalImages;
+          setRightImage(data.allImages[rightIdx]);
         }
       } catch (error) {
         console.error('Error fetching daily image:', error);
         setCurrentImage("/placeholder.svg");
+        setLeftImage("/placeholder.svg");
+        setRightImage("/placeholder.svg");
       }
     };
 
@@ -172,14 +217,52 @@ export default function Home() {
     // Get today's date - use this to select the message
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const daysSinceEpoch = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
     
-    // Select message based on day (ensures same message all day, changes at midnight)
-    const messageIndex = daysSinceEpoch % loveMessages.length;
-    setCurrentMessage(loveMessages[messageIndex]);
+    const dayOfMonth = today.getDate();
+    const month = today.getMonth(); // 0-indexed (0 = January, 1 = February, etc.)
+    
+    // Check if today is Valentine's Day (February 14th)
+    if (month === 1 && dayOfMonth === 14) {
+      // Display special intimate Valentine's Day message
+      setCurrentMessage(valentinesMessage);
+    } else if (dayOfMonth === 30) {
+      // Display special anniversary message on the 30th
+      setCurrentMessage(anniversaryMessage);
+    } else {
+      // Regular daily message rotation for other days
+      const daysSinceEpoch = Math.floor(today.getTime() / (1000 * 60 * 60 * 24));
+      const messageIndex = daysSinceEpoch % loveMessages.length;
+      setCurrentMessage(loveMessages[messageIndex]);
+    }
 
     setIsLoaded(true)
   }, [])
+
+  // Separate useEffect for image rotation
+  useEffect(() => {
+    if (allImages.length === 0) return;
+
+    // Set up interval to change images every 5 seconds
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => {
+        const newIndex = (prevIndex + 1) % allImages.length;
+        
+        // Update all three images based on new index
+        setCurrentImage(allImages[newIndex]);
+        
+        const leftIdx = (newIndex - 1 + allImages.length) % allImages.length;
+        setLeftImage(allImages[leftIdx]);
+        
+        const rightIdx = (newIndex + 1) % allImages.length;
+        setRightImage(allImages[rightIdx]);
+        
+        return newIndex;
+      });
+    }, 5000); // 5 seconds
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
+  }, [allImages])
 
   const saveMessage = () => {
     const newMessage: SavedMessage = {
@@ -248,8 +331,23 @@ export default function Home() {
             A little reminder of how much you mean to me
           </p>
 
-          {/* Photo Frame - Enhanced glow effects */}
-          <div className="flex justify-center animate-fade-in [animation-delay:400ms]">
+          {/* Photo Frames - Enhanced glow effects with three photos */}
+          <div className="flex justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 animate-fade-in [animation-delay:400ms]">
+            {/* Left Photo - Smaller */}
+            <div className="relative group hidden sm:block">
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full opacity-60 blur-xl group-hover:opacity-80 transition duration-1000"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-30 blur-2xl group-hover:opacity-50 transition duration-1000"></div>
+
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
+                <img
+                  src={leftImage || "/placeholder.svg"}
+                  alt="Joy"
+                  className="w-full h-full object-cover animate-scale-in"
+                />
+              </div>
+            </div>
+
+            {/* Center Photo - Main/Largest */}
             <div className="relative group">
               <div className="absolute -inset-2 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full opacity-80 blur-2xl group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
               <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-40 blur-3xl group-hover:opacity-60 transition duration-1000"></div>
@@ -258,6 +356,20 @@ export default function Home() {
               <div className="relative w-32 h-32 xs:w-36 xs:h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-64 xl:h-64 rounded-full overflow-hidden border-4 border-pink-200/70 shadow-[0_0_40px_rgba(255,182,193,0.8)] backdrop-blur-sm bg-white/20">
                 <img
                   src={currentImage || "/placeholder.svg"}
+                  alt="Joy"
+                  className="w-full h-full object-cover animate-scale-in"
+                />
+              </div>
+            </div>
+
+            {/* Right Photo - Smaller */}
+            <div className="relative group hidden sm:block">
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full opacity-60 blur-xl group-hover:opacity-80 transition duration-1000"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-30 blur-2xl group-hover:opacity-50 transition duration-1000"></div>
+
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
+                <img
+                  src={rightImage || "/placeholder.svg"}
                   alt="Joy"
                   className="w-full h-full object-cover animate-scale-in"
                 />
