@@ -332,13 +332,13 @@ export default function Home() {
           </p>
 
           {/* Photo Frames - Enhanced glow effects with three photos */}
-          <div className="flex justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 animate-fade-in [animation-delay:400ms]">
+          <div className="flex justify-center items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 animate-fade-in [animation-delay:400ms]">
             {/* Left Photo - Smaller */}
-            <div className="relative group hidden sm:block">
+            <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full opacity-60 blur-xl group-hover:opacity-80 transition duration-1000"></div>
               <div className="absolute -inset-2 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-30 blur-2xl group-hover:opacity-50 transition duration-1000"></div>
 
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
+              <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
                 <img
                   src={leftImage || "/placeholder.svg"}
                   alt="Joy"
@@ -353,7 +353,7 @@ export default function Home() {
               <div className="absolute -inset-4 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-40 blur-3xl group-hover:opacity-60 transition duration-1000"></div>
 
               {/* Photo container - Enhanced border glow */}
-              <div className="relative w-32 h-32 xs:w-36 xs:h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-64 xl:h-64 rounded-full overflow-hidden border-4 border-pink-200/70 shadow-[0_0_40px_rgba(255,182,193,0.8)] backdrop-blur-sm bg-white/20">
+              <div className="relative w-28 h-28 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-64 xl:h-64 rounded-full overflow-hidden border-4 border-pink-200/70 shadow-[0_0_40px_rgba(255,182,193,0.8)] backdrop-blur-sm bg-white/20">
                 <img
                   src={currentImage || "/placeholder.svg"}
                   alt="Joy"
@@ -363,11 +363,11 @@ export default function Home() {
             </div>
 
             {/* Right Photo - Smaller */}
-            <div className="relative group hidden sm:block">
+            <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 rounded-full opacity-60 blur-xl group-hover:opacity-80 transition duration-1000"></div>
               <div className="absolute -inset-2 bg-gradient-to-r from-pink-300 via-rose-300 to-pink-400 rounded-full opacity-30 blur-2xl group-hover:opacity-50 transition duration-1000"></div>
 
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
+              <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded-full overflow-hidden border-3 border-pink-200/60 shadow-[0_0_30px_rgba(255,182,193,0.6)] backdrop-blur-sm bg-white/15">
                 <img
                   src={rightImage || "/placeholder.svg"}
                   alt="Joy"
