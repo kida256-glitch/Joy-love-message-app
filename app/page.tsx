@@ -298,8 +298,6 @@ export default function Home() {
     }
   }
 
-  const isMessageAlreadySaved = savedMessages.some(msg => msg.message === currentMessage)
-
   return (
     <main className="relative w-full min-h-screen overflow-y-auto">
       {/* 3D Background */}
@@ -416,12 +414,9 @@ export default function Home() {
             
             <button
               onClick={saveMessage}
-              disabled={isMessageAlreadySaved}
-              className="group relative px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-purple-500 via-violet-500 to-purple-600 text-white rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:shadow-[0_0_50px_rgba(168,85,247,0.9)] transform hover:scale-105 transition-all duration-300 hover:from-purple-600 hover:via-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="group relative px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 bg-gradient-to-r from-purple-500 via-violet-500 to-purple-600 text-white rounded-full font-semibold text-sm sm:text-base md:text-lg shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:shadow-[0_0_50px_rgba(168,85,247,0.9)] transform hover:scale-105 transition-all duration-300 hover:from-purple-600 hover:via-violet-600 hover:to-purple-700"
             >
-              <span className="relative z-10 drop-shadow-lg">
-                {isMessageAlreadySaved ? '💾 Saved' : '💾 Save Message'}
-              </span>
+              <span className="relative z-10 drop-shadow-lg">💾 Save Message</span>
               <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
             
